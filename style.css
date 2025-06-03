@@ -1,0 +1,506 @@
+body {
+    font-family: Arial, sans-serif;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    
+    /* Background image setup */
+    background-color: #333; /* Fallback color */
+    position: relative; /* Add this for proper stacking */
+    min-height: 100vh;
+    margin: 0;
+    padding-top: 30px;
+    box-sizing: border-box;
+    color: #f0f0f0;
+}
+
+/* Create separate background containers for each half */
+body::before,
+body::after {
+    content: '';
+    position: fixed;
+    top: 0;
+    height: 100vh;
+    width: 50%; /* Each image takes half the width */
+    z-index: -1;
+}
+
+body::before {
+    left: 0;
+    background-image: 
+        linear-gradient(rgba(0, 0, 0, 0.3), rgba(0, 0, 0, 0.3)),
+        url('pawnwar1.png');
+    background-size: 80% auto; /* Reduce size to 80% width, maintain aspect ratio */
+    background-position: center;
+    background-repeat: no-repeat;
+    background-color: #2a2a2a; /* Dark background color to fill empty space */
+}
+
+body::after {
+    right: 0;
+    background-image: 
+        linear-gradient(rgba(0, 0, 0, 0.3), rgba(0, 0, 0, 0.3)),
+        url('knightdefense1.png');
+    background-size: 80% auto; /* Reduce size to 80% width, maintain aspect ratio */
+    background-position: center;
+    background-repeat: no-repeat;
+    background-color: #2a2a2a; /* Dark background color to fill empty space */
+}
+
+.title-container h1 {
+    /* color: #fff; */ /* Already set by body default or overridden by .title-container h1 below */
+    text-shadow: 2px 2px 4px rgba(0,0,0,0.7);
+}
+
+.decorative-pawn.white {
+    /* color: #fff; */ /* Already set by body default */
+    text-shadow: 1px 1px 2px #000;
+}
+.decorative-pawn.black {
+    color: #ccc;
+    text-shadow: 1px 1px 2px #000;
+}
+
+#pawn-war-setup-container { /* Renamed from #setup-container */
+    background-color: rgba(249, 249, 249, 0.9);
+    color: #333;
+    border: 1px solid #aaa;
+    /* Keep other #setup-container styles if they were separate, or merge them here */
+    border: 2px solid #c0c0c0;
+    padding: 20px;
+    border-radius: 8px;
+    /* background-color: #f9f9f9; /* This would override the rgba if not careful, ensure one is chosen */
+    box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+    margin-bottom: 30px;
+    width: 400px;
+    text-align: center;
+}
+
+#pawn-war-setup-container h2 { /* Target h2 within the renamed container */
+    color: #222;
+}
+
+.game-info-container h4 {
+    /* color: #fff; */ /* Already set by body default */
+    text-shadow: 1px 1px 2px #000;
+}
+#game-status {
+    /* color: #fff; */ /* Already set by body default */
+    text-shadow: 1px 1px 2px #000;
+}
+#hint-count-display {
+    /* color: #fff; */ /* Already set by body default */
+    text-shadow: 1px 1px 1px #000;
+}
+
+/* General title styling - ensure it's readable on potentially complex BG */
+.title-container {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 20px; /* Reduced from 30px */
+    position: relative; /* For z-index if needed over background */
+    z-index: 10;
+}
+
+.title-container h1 {
+    font-size: 2.5em;
+    margin: 0 20px;
+    color: #fff; /* Explicitly white for title over new BG */
+    text-shadow: 2px 2px 4px #000, 0 0 5px #000; /* Stronger shadow */
+}
+
+.decorative-pawn {
+    font-size: 3em;
+    /* color already handled by .white and .black specific versions */
+}
+/* .decorative-pawn.white is fine */
+/* .decorative-pawn.black is fine */
+
+
+/* Styles for #pawn-war-setup-container (previously #setup-container) */
+/* Ensure these styles are correctly applied to #pawn-war-setup-container */
+/* The #setup-container rules from lines 36-40 and 86-95 are now merged into #pawn-war-setup-container above */
+
+#pawn-war-setup-container > div { /* Style for color, difficulty, icon selection divs */
+    margin-bottom: 20px;
+}
+#setup-container > div:last-child {
+    margin-bottom: 0;
+}
+
+#setup-container h2 {
+    font-size: 1.3em;
+    color: #444;
+    margin-top: 0;
+    margin-bottom: 15px;
+}
+
+#setup-container button {
+    padding: 10px 15px;
+    font-size: 1em;
+    margin: 5px;
+    cursor: pointer;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    background-color: #fff;
+    transition: background-color 0.2s;
+}
+
+#setup-container button:hover {
+    background-color: #e0e0e0;
+}
+
+
+#board {
+    display: grid;
+    grid-template-columns: repeat(8, 50px);
+    grid-template-rows: repeat(8, 50px);
+    border: 2px solid #333;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
+    position: relative; /* Added for potential absolute positioning of children if needed */
+}
+
+.board-rotated {
+    transform: rotate(180deg);
+}
+
+/* Counter-rotate pawn symbols if the board is rotated */
+.board-rotated .pawn {
+    transform: rotate(180deg);
+    display: inline-block; /* Ensures transform applies correctly */
+}
+
+
+.square {
+    width: 50px;
+    height: 50px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 30px;
+    cursor: pointer;
+}
+
+.light {
+    background-color: #f0d9b5;
+}
+
+.dark {
+    background-color: #b58863;
+}
+
+.pawn {
+    font-size: 30px;
+    text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.7);
+    transition: opacity 0.5s ease-out; /* For smooth fade-out */
+}
+
+@keyframes fadeOut {
+    from { opacity: 1; }
+    to { opacity: 0; }
+}
+
+.pawn-captured-fadeout {
+    animation: fadeOut 0.5s ease-out forwards;
+}
+
+.white-pawn {
+    color: #ffffff; /* Pure white */
+    text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.8), /* Stronger shadow for better contrast */
+                -1px -1px 3px rgba(0, 0, 0, 0.8),
+                1px -1px 3px rgba(0, 0, 0, 0.8),
+                -1px 1px 3px rgba(0, 0, 0, 0.8);
+}
+
+.black-pawn {
+    color: #333;
+    text-shadow: 1px 1px 2px rgba(255, 255, 255, 0.3);
+}
+
+.selected {
+    background-color: yellow;
+}
+
+.possible-move {
+    background-color: rgba(0, 255, 0, 0.5);
+}
+
+.hint-square {
+    background-color: rgba(0, 0, 255, 0.3) !important; /* Blueish highlight, !important to override others if needed */
+    outline: 2px solid blue;
+}
+
+#game-status {
+    margin-bottom: 20px;
+    font-size: 1.2em;
+    font-weight: bold;
+    min-height: 1.5em; /* Ensure space even when empty */
+    text-align: center; /* Center the game status text */
+}
+
+.game-info-container {
+    display: flex;
+    justify-content: space-between; /* Pushes captured sections to sides */
+    align-items: flex-start; /* Align items at the top */
+    width: 450px; /* Adjust width as needed, slightly wider than board */
+    margin-bottom: 10px;
+}
+
+.captured-pawns-display {
+    min-height: 30px; /* Height for one pawn */
+    min-width: 100px; /* Width for a couple of pawns */
+    display: flex;
+    flex-wrap: wrap; /* Allow pawns to wrap if many are captured */
+    align-items: center;
+    gap: 2px; /* Small gap between pawn symbols */
+    padding: 5px;
+    border: 1px solid #aaa; /* Darker border for better definition */
+    background-color: #d8d8d8; /* Medium gray for better contrast with both pawn colors */
+    border-radius: 4px;
+}
+
+.captured-pawns-display .pawn {
+    font-size: 24px; /* Slightly smaller for captured display */
+    text-shadow: none; /* Optional: remove shadow for captured */
+}
+
+#captured-by-player, #captured-by-ai {
+    text-align: center;
+}
+
+#captured-by-player h4, #captured-by-ai h4 {
+    margin-top: 0;
+    margin-bottom: 5px;
+    font-size: 0.9em;
+}
+
+/* Knight Defense Specific Styles */
+#knight-defense-game-area h2 {
+    color: #fff; /* White text for heading on dark background */
+    text-shadow: 1px 1px 2px #000;
+    margin-bottom: 15px;
+}
+
+#kd-info-bar {
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+    padding: 10px;
+    background-color: rgba(0, 0, 0, 0.2); /* Slightly darker semi-transparent background for info bar */
+    border-radius: 5px;
+    margin-bottom: 20px;
+    color: #fff; /* White text for info bar */
+    text-shadow: 1px 1px 1px #000;
+    width: 400px; /* Match board width */
+    box-sizing: border-box;
+}
+
+#kd-info-bar div {
+    margin: 0 10px;
+}
+
+#kd-board {
+    display: grid;
+    grid-template-columns: repeat(8, 50px); /* Standard 8x8 board */
+    grid-template-rows: repeat(8, 50px);
+    width: 400px; /* 8 squares * 50px */
+    height: 400px; /* 8 squares * 50px */
+    border: 2px solid #fff; /* White border for KD board */
+    box-shadow: 0 0 10px rgba(255, 255, 255, 0.3);
+    margin: 0 auto; /* Center the board */
+    position: relative;
+    /* Squares will be added by JS, can reuse .square, .light, .dark if desired */
+}
+
+#kd-message-area {
+    color: #fff;
+    text-shadow: 1px 1px 1px #000;
+    font-weight: bold;
+}
+
+.kd-game-controls button {
+    padding: 10px 15px;
+    font-size: 1em;
+    margin: 5px;
+    cursor: pointer;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    background-color: #fff;
+    color: #333;
+    transition: background-color 0.2s;
+}
+
+.kd-game-controls button:hover {
+    background-color: #e0e0e0;
+}
+/* Knight Defense specific highlights */
+.kd-selected-knight {
+    background-color: rgba(255, 255, 0, 0.6); /* Brighter yellow for selected knight */
+    outline: 2px solid gold;
+}
+
+.kd-possible-move {
+    background-color: rgba(0, 255, 0, 0.4); /* Lighter green for possible moves */
+}
+
+/* Ensure KD pieces are visible on dark squares if reusing .pawn */
+#kd-board .pawn {
+    text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.8),
+                -1px -1px 3px rgba(0, 0, 0, 0.8),
+                1px -1px 3px rgba(0, 0, 0, 0.8),
+                -1px 1px 3px rgba(0, 0, 0, 0.8);
+}
+
+#main-menu {
+    width: 100%;
+    min-height: 70vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center; /* Center content vertically */
+    gap: 20px;
+    z-index: 10;
+    position: relative;
+    padding: 20px;
+    box-sizing: border-box;
+}
+
+#main-menu h2 {
+    color: #fff;
+    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.7);
+    font-size: 2em;
+    margin-bottom: 30px;
+}
+
+.game-choice-container {
+    display: flex;
+    width: 100%;
+    justify-content: space-evenly; /* Changed from center to space-evenly */
+    gap: 20px; /* Reduced gap */
+    margin-top: 20px;
+    padding: 0 40px; /* Add some padding on the sides */
+    box-sizing: border-box;
+}
+
+.game-choice {
+    width: 400px; /* Slightly wider cards */
+    height: 350px; /* Slightly shorter height */
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: flex-end;
+    padding: 30px;
+    border-radius: 15px;
+    background-color: rgba(0, 0, 0, 0.6); /* Make background slightly darker */
+    box-shadow: 0 0 20px rgba(0, 0, 0, 0.3); /* Add shadow for better separation */
+    backdrop-filter: blur(5px);
+    transition: transform 0.3s, background-color 0.3s;
+    cursor: pointer;
+    border: 2px solid rgba(255, 255, 255, 0.1);
+    position: relative;
+}
+
+.game-choice:hover {
+    transform: translateY(-10px);
+    background-color: rgba(0, 0, 0, 0.8);
+    border-color: rgba(255, 255, 255, 0.3);
+}
+
+.game-choice h3 {
+    color: #fff;
+    font-size: 1.5em;
+    margin-bottom: 15px;
+    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.7);
+}
+
+.game-choice p {
+    color: #ddd;
+    text-align: center;
+    margin-bottom: 20px;
+    text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.7);
+}
+
+.game-choice button {
+    padding: 12px 24px;
+    font-size: 1.1em;
+    border: none;
+    border-radius: 8px;
+    background-color: rgba(255, 255, 255, 0.9);
+    color: #333;
+    cursor: pointer;
+    transition: background-color 0.3s;
+}
+
+.game-choice button:hover {
+    background-color: #fff;
+}
+
+#pawn-war-choice {
+    /* margin-top removed */
+}
+
+#knight-defense-choice {
+    /* margin-bottom removed */
+}
+
+/* Level Up Animation Styles */
+.level-up-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.7);
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    z-index: 1000;
+    animation: fadeInOut 3s forwards;
+    pointer-events: none; /* Allow clicks to pass through */
+}
+
+.level-up-text {
+    font-size: 6em;
+    color: #FFD700;
+    text-shadow: 
+        0 0 10px #FFD700,
+        0 0 20px #FFD700,
+        0 0 30px #FF8C00,
+        0 0 40px #FF8C00;
+    animation: scaleUp 0.5s ease-out;
+    text-align: center;
+    font-weight: bold;
+}
+
+.level-up-number {
+    font-size: 8em;
+    color: #FFF;
+    text-shadow: 
+        0 0 10px #4169E1,
+        0 0 20px #4169E1,
+        0 0 30px #0000FF,
+        0 0 40px #0000FF;
+    animation: scaleUp 0.5s ease-out 0.3s;
+    text-align: center;
+    font-weight: bold;
+}
+
+@keyframes fadeInOut {
+    0% { opacity: 0; }
+    20% { opacity: 1; }
+    80% { opacity: 1; }
+    100% { opacity: 0; }
+}
+
+@keyframes scaleUp {
+    0% { 
+        transform: scale(0.1);
+        opacity: 0;
+    }
+    100% { 
+        transform: scale(1);
+        opacity: 1;
+    }
+}

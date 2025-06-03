@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Chess Pawn Game</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="title-container">
+        <span class="decorative-pawn white">&#9817;</span>
+        <h1>Pawn War & Knight Defense</h1>
+        <span class="decorative-pawn black">&#9823;</span>
+    </div>
+
+    <div id="main-menu">
+        <h2>Choose Your Game:</h2>
+        <div class="game-choice-container">
+            <div id="pawn-war-choice" class="game-choice">
+                <h3>Pawn War</h3>
+                <p>Master the art of pawn movement and strategy in this unique chess variant. Challenge yourself against an AI opponent in a battle of pawns!</p>
+                <button id="select-pawn-war">Play Pawn War</button>
+            </div>
+            <div id="knight-defense-choice" class="game-choice">
+                <h3>Knight Defense</h3>
+                <p>Defend your fortress with a lone knight against waves of advancing pawns. How long can you survive as the difficulty increases?</p>
+                <button id="select-knight-defense">Play Knight Defense</button>
+            </div>
+        </div>
+    </div>
+
+    <div id="pawn-war-setup-container" style="display: none;"> <!-- Was setup-container -->
+        <div id="color-selection">
+            <h2>Choose Your Color:</h2>
+            <button id="play-white">Play as White</button>
+        <button id="play-black">Play as Black</button>
+    </div>
+
+    <div id="difficulty-selection" style="display: none;"> <!-- Initially hidden -->
+        <h2>Choose AI Difficulty:</h2>
+        <button id="difficulty-easy">Easy</button>
+        <button id="difficulty-medium">Medium</button>
+        <button id="difficulty-hard">Hard</button>
+    </div>
+
+    <div id="icon-selection" style="display: none;"> <!-- Initially hidden -->
+        <h2>Choose Pawn Style:</h2>
+        <button id="icon-set-standard">Standard (♙♟)</button>
+        <button id="icon-set-geometric">Geometric (△▲)</button>
+    </div>
+    </div> <!-- End of pawn-war-setup-container -->
+
+    <div id="pawn-war-game-area" style="display: none;"> <!-- Was game-area -->
+        <div class="game-info-container" style="display: flex; justify-content: space-around; align-items: center; width: 400px; margin-bottom: 10px;">
+            <div id="captured-by-player">
+                <h4>Captured by You:</h4>
+                <div id="player-captured-pawns" class="captured-pawns-display"></div>
+            </div>
+            <div id="game-status" style="text-align: center; flex-grow: 1;"></div>
+            <div id="captured-by-ai">
+                <h4>Captured by AI:</h4>
+                <div id="ai-captured-pawns" class="captured-pawns-display"></div>
+            </div>
+        </div>
+        <div id="board"></div>
+        <div class="game-controls" style="margin-top: 20px; text-align: center;">
+            <button id="hint-button" style="margin-right: 10px;">Hint</button>
+            <button id="undo-button" style="margin-right: 10px;">Undo Move</button>
+            <button id="start-over-button">Start Over</button>
+            <div id="hint-count-display" style="margin-top: 10px; font-size: 0.9em;">Hints left: -</div>
+        </div>
+    </div>
+
+    <div id="knight-defense-game-area" style="display: none;">
+        <h2>Knight Defense</h2>
+        <div id="kd-info-bar" style="display: flex; justify-content: space-around; margin-bottom: 10px; font-size: 1.1em;">
+            <div>Fortress Health: <span id="kd-fortress-health">10</span></div>
+            <div>Pawns Captured: <span id="kd-pawns-captured">0</span></div>
+            <div>Level: <span id="kd-current-level">1</span></div>
+        </div>
+        <div id="kd-board" class="board-container">
+            <!-- Knight Defense board will be rendered here by knight_defense.js -->
+        </div>
+        <div id="kd-message-area" style="text-align: center; margin-top: 10px; font-size: 1.2em; min-height: 1.5em;">
+            <!-- Messages like "Level Up!", "Game Over!" -->
+        </div>
+        <div class="kd-game-controls" style="margin-top: 20px; text-align: center;">
+             <button id="kd-start-button">Start Knight Defense</button>
+             <button id="kd-reset-button" style="display: none;">Reset Knight Defense</button> <!-- Initially hidden -->
+             <button id="kd-back-to-main-menu">Back to Main Menu</button>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+    <script src="knight_defense.js"></script>
+</body>
+</html>
