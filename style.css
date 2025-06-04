@@ -504,3 +504,157 @@ body::after {
         opacity: 1;
     }
 }
+
+/* Responsive Design */
+@media screen and (max-width: 768px) {
+    body::before,
+    body::after {
+        width: 100%;
+        height: 50vh;
+        background-size: contain;
+    }
+
+    body::before {
+        top: 0;
+    }
+
+    body::after {
+        top: 50vh;
+    }
+
+    .title-container h1 {
+        font-size: 1.8em;
+        text-align: center;
+    }
+
+    .game-choice-container {
+        flex-direction: column;
+        padding: 10px;
+    }
+
+    .game-choice {
+        width: 90%;
+        margin: 10px auto;
+    }
+
+    #board {
+        grid-template-columns: repeat(8, 40px);
+        grid-template-rows: repeat(8, 40px);
+        margin: 10px auto;
+    }
+
+    .square {
+        width: 40px;
+        height: 40px;
+        font-size: 24px;
+    }
+
+    .pawn {
+        font-size: 24px;
+    }
+
+    #pawn-war-setup-container {
+        width: 90%;
+        max-width: 400px;
+        padding: 15px;
+        margin: 10px auto;
+    }
+
+    .game-info-container {
+        width: 90%;
+        flex-direction: column;
+        align-items: center;
+    }
+
+    #captured-by-player,
+    #captured-by-ai {
+        margin: 5px 0;
+    }
+
+    .game-controls {
+        display: flex;
+        flex-direction: column;
+        gap: 10px;
+    }
+
+    .game-controls button {
+        width: 100%;
+        margin: 5px 0;
+    }
+
+    #kd-info-bar {
+        flex-direction: column;
+        gap: 10px;
+    }
+}
+
+/* Even smaller screens */
+@media screen and (max-width: 380px) {
+    .title-container h1 {
+        font-size: 1.5em;
+    }
+
+    #board {
+        grid-template-columns: repeat(8, 35px);
+        grid-template-rows: repeat(8, 35px);
+    }
+
+    .square {
+        width: 35px;
+        height: 35px;
+        font-size: 20px;
+    }
+
+    .pawn {
+        font-size: 20px;
+    }
+}
+
+/* Landscape mode adjustments */
+@media screen and (max-height: 600px) and (orientation: landscape) {
+    body {
+        padding-top: 10px;
+    }
+
+    .title-container {
+        margin-bottom: 10px;
+    }
+
+    .title-container h1 {
+        font-size: 1.5em;
+    }
+
+    #board {
+        grid-template-columns: repeat(8, 35px);
+        grid-template-rows: repeat(8, 35px);
+    }
+
+    .square {
+        width: 35px;
+        height: 35px;
+    }
+
+    .game-controls {
+        flex-direction: row;
+        flex-wrap: wrap;
+        justify-content: center;
+    }
+
+    .game-controls button {
+        width: auto;
+    }
+}
+
+/* Fix for background images on mobile */
+@media screen and (max-width: 768px) {
+    body {
+        background: #2a2a2a;
+    }
+
+    body::before,
+    body::after {
+        background-attachment: scroll;
+        background-position: center;
+        opacity: 0.3;
+    }
+}
