@@ -49,6 +49,7 @@ let moveHistory = []; // For Undo functionality
 let enPassantHintShown = false; // For tutorial tooltip
 let maxHints = 0;
 let hintsLeft = 0;
+let pawnsUsedEnPassant = new Set(); // Track pawns that have used en passant
 
 // Initialize the board with pawns
 function initializeBoard() {
@@ -161,6 +162,9 @@ function isValidMove(startRow, startCol, endRow, endCol) {
     const rowDiff = endRow - startRow;
     const colDiff = Math.abs(endCol - startCol);
 
+    // Create a unique identifier for the pawn
+    const pawnId = `${startRow}-${startCol}`;
+
     if (piece.color === 'white') {
         // White pawn moves
         if (rowDiff === -1 && colDiff === 0 && board[endRow][endCol] === null) { // 1-step forward
@@ -174,12 +178,13 @@ function isValidMove(startRow, startCol, endRow, endCol) {
         }
         // En passant for white
         if (startRow === 3 && rowDiff === -1 && colDiff === 1 && board[endRow][endCol] === null && lastMoveDetails) {
-            if (lastMoveDetails.pieceColor === 'black' &&
+            if (!pawnsUsedEnPassant.has(pawnId) && // Check if this pawn hasn't used en passant before
+                lastMoveDetails.pieceColor === 'black' &&
                 lastMoveDetails.isTwoStepPawnMove &&
                 lastMoveDetails.endRow === 3 &&
                 lastMoveDetails.endCol === endCol &&
                 board[3][endCol] && board[3][endCol].color === 'black' && board[3][endCol].type === 'pawn') {
-                return { valid: true, type: 'enPassant', capturedPawnRow: 3, capturedPawnCol: endCol };
+                return { valid: true, type: 'enPassant', capturedPawnRow: 3, capturedPawnCol: endCol, pawnId: pawnId };
             }
         }
     } else { // Black pawn moves
@@ -194,12 +199,13 @@ function isValidMove(startRow, startCol, endRow, endCol) {
         }
         // En passant for black
         if (startRow === 4 && rowDiff === 1 && colDiff === 1 && board[endRow][endCol] === null && lastMoveDetails) {
-            if (lastMoveDetails.pieceColor === 'white' &&
+            if (!pawnsUsedEnPassant.has(pawnId) && // Check if this pawn hasn't used en passant before
+                lastMoveDetails.pieceColor === 'white' &&
                 lastMoveDetails.isTwoStepPawnMove &&
                 lastMoveDetails.endRow === 4 &&
                 lastMoveDetails.endCol === endCol &&
                 board[4][endCol] && board[4][endCol].color === 'white' && board[4][endCol].type === 'pawn') {
-                return { valid: true, type: 'enPassant', capturedPawnRow: 4, capturedPawnCol: endCol };
+                return { valid: true, type: 'enPassant', capturedPawnRow: 4, capturedPawnCol: endCol, pawnId: pawnId };
             }
         }
     }
@@ -220,6 +226,8 @@ function movePawn(startRow, startCol, endRow, endCol, moveDetails) {
     // Store captured piece data BEFORE updating board state
     if (moveDetails.type === 'enPassant') {
         capturedPieceData = { ...board[moveDetails.capturedPawnRow][moveDetails.capturedPawnCol] };
+        // Mark this pawn as having used en passant
+        pawnsUsedEnPassant.add(moveDetails.pawnId);
     } else if (board[endRow][endCol]) {
         capturedPieceData = { ...board[endRow][endCol] };
     }
@@ -234,11 +242,6 @@ function movePawn(startRow, startCol, endRow, endCol, moveDetails) {
         if (epSquare && epSquare.firstChild) {
             capturedPieceElement = epSquare.firstChild;
             board[moveDetails.capturedPawnRow][moveDetails.capturedPawnCol] = null;
-        }
-    } else if (capturedPieceData) {
-        const targetSquare = pawnWarBoardElement.querySelector(`[data-row="${endRow}"][data-col="${endCol}"]`);
-        if (targetSquare && targetSquare.firstChild) {
-            capturedPieceElement = targetSquare.firstChild;
         }
     }
 
@@ -276,7 +279,10 @@ function checkWinCondition() {
         if (board[0][j] && board[0][j].type === 'pawn' && board[0][j].color === 'white') {
             board[0][j].type = 'queen';
             renderPawnWarBoard();
-            if(pawnWarGameStatusElement) pawnWarGameStatusElement.textContent = 'White Wins by Promotion!';
+            if(pawnWarGameStatusElement) {
+                pawnWarGameStatusElement.textContent = 'White Wins by Promotion!';
+                pawnWarGameStatusElement.className = 'win-message';
+            }
             gameOver = true;
             updateGameControlButtonsState();
             return;
@@ -288,7 +294,10 @@ function checkWinCondition() {
         if (board[7][j] && board[7][j].type === 'pawn' && board[7][j].color === 'black') {
             board[7][j].type = 'queen';
             renderPawnWarBoard();
-            if(pawnWarGameStatusElement) pawnWarGameStatusElement.textContent = 'Black Wins by Promotion!';
+            if(pawnWarGameStatusElement) {
+                pawnWarGameStatusElement.textContent = 'Black Wins by Promotion!';
+                pawnWarGameStatusElement.className = 'win-message';
+            }
             gameOver = true;
             updateGameControlButtonsState();
             return;
@@ -926,7 +935,8 @@ function saveMoveHistory() {
         lastMoveDetails: currentLastMoveDetails,
         playerCaptured: currentPlayerCaptured,
         aiCaptured: currentAiCaptured,
-        gameOver: gameOver
+        gameOver: gameOver,
+        pawnsUsedEnPassant: new Set(pawnsUsedEnPassant) // Save en passant tracking state
     });
     updateGameControlButtonsState();
 }
@@ -947,6 +957,7 @@ function undoMove() {
     playerCaptured = [...prevState.playerCaptured];
     aiCaptured = [...prevState.aiCaptured];
     gameOver = prevState.gameOver;
+    pawnsUsedEnPassant = new Set(prevState.pawnsUsedEnPassant); // Restore en passant tracking state
 
     selectedPawn = null;
     clearHighlights(); // Clear any visual highlights like 'selected' or 'possible-move'
@@ -1039,6 +1050,7 @@ function resetGameToSelection() {
     moveHistory = [];
     enPassantHintShown = false;
     hintsLeft = 0;
+    pawnsUsedEnPassant.clear(); // Clear the en passant tracking when resetting the game
     
     // Clear Pawn War UI elements
     if(pawnWarBoardElement) pawnWarBoardElement.innerHTML = '';
@@ -1094,6 +1106,7 @@ function startGameWithChosenIcons(chosenIconSet) { // This is the final step for
     moveHistory = [];
     renderCapturedPawns();
     enPassantHintShown = false;
+    pawnsUsedEnPassant.clear(); // Clear the en passant tracking when starting a new game
 
     // Set up hints based on difficulty
     if (currentAIDifficulty === 'easy') maxHints = 5;

@@ -1,546 +1,363 @@
+/* Base styles */
+:root {
+    --primary-color: #4a90e2;
+    --secondary-color: #2c3e50;
+    --accent-color: #f39c12;
+    --light-bg: #f5f6fa;
+    --dark-bg: #2a2a2a;
+    --text-light: #ffffff;
+    --text-dark: #333333;
+    --board-light: #f0d9b5;
+    --board-dark: #b58863;
+    --shadow-color: rgba(0, 0, 0, 0.2);
+}
+
 body {
-    font-family: Arial, sans-serif;
+    font-family: 'Segoe UI', Arial, sans-serif;
     display: flex;
     flex-direction: column;
     align-items: center;
-    
-    /* Background image setup */
-    background-color: #333; /* Fallback color */
-    position: relative; /* Add this for proper stacking */
+    background-color: var(--dark-bg);
+    position: relative;
     min-height: 100vh;
     margin: 0;
-    padding-top: 30px;
+    padding: 20px;
     box-sizing: border-box;
-    color: #f0f0f0;
+    color: var(--text-light);
+    line-height: 1.6;
 }
 
-/* Create separate background containers for each half */
+/* Split background setup */
 body::before,
 body::after {
     content: '';
     position: fixed;
     top: 0;
     height: 100vh;
-    width: 50%; /* Each image takes half the width */
+    width: 50%;
     z-index: -1;
+    background-size: cover;
+    background-position: center;
+    transition: opacity 0.3s ease;
 }
 
 body::before {
     left: 0;
     background-image: 
-        linear-gradient(rgba(0, 0, 0, 0.3), rgba(0, 0, 0, 0.3)),
+        linear-gradient(rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.5)),
         url('pawnwar1.png');
-    background-size: 80% auto; /* Reduce size to 80% width, maintain aspect ratio */
-    background-position: center;
-    background-repeat: no-repeat;
-    background-color: #2a2a2a; /* Dark background color to fill empty space */
 }
 
 body::after {
     right: 0;
     background-image: 
-        linear-gradient(rgba(0, 0, 0, 0.3), rgba(0, 0, 0, 0.3)),
+        linear-gradient(rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.5)),
         url('knightdefense1.png');
-    background-size: 80% auto; /* Reduce size to 80% width, maintain aspect ratio */
-    background-position: center;
-    background-repeat: no-repeat;
-    background-color: #2a2a2a; /* Dark background color to fill empty space */
 }
 
-.title-container h1 {
-    /* color: #fff; */ /* Already set by body default or overridden by .title-container h1 below */
-    text-shadow: 2px 2px 4px rgba(0,0,0,0.7);
-}
-
-.decorative-pawn.white {
-    /* color: #fff; */ /* Already set by body default */
-    text-shadow: 1px 1px 2px #000;
-}
-.decorative-pawn.black {
-    color: #ccc;
-    text-shadow: 1px 1px 2px #000;
-}
-
-#pawn-war-setup-container { /* Renamed from #setup-container */
-    background-color: rgba(249, 249, 249, 0.9);
-    color: #333;
-    border: 1px solid #aaa;
-    /* Keep other #setup-container styles if they were separate, or merge them here */
-    border: 2px solid #c0c0c0;
-    padding: 20px;
-    border-radius: 8px;
-    /* background-color: #f9f9f9; /* This would override the rgba if not careful, ensure one is chosen */
-    box-shadow: 0 2px 5px rgba(0,0,0,0.1);
-    margin-bottom: 30px;
-    width: 400px;
-    text-align: center;
-}
-
-#pawn-war-setup-container h2 { /* Target h2 within the renamed container */
-    color: #222;
-}
-
-.game-info-container h4 {
-    /* color: #fff; */ /* Already set by body default */
-    text-shadow: 1px 1px 2px #000;
-}
-#game-status {
-    /* color: #fff; */ /* Already set by body default */
-    text-shadow: 1px 1px 2px #000;
-}
-#hint-count-display {
-    /* color: #fff; */ /* Already set by body default */
-    text-shadow: 1px 1px 1px #000;
-}
-
-/* General title styling - ensure it's readable on potentially complex BG */
+/* Title and decorative elements */
 .title-container {
     display: flex;
     align-items: center;
     justify-content: center;
-    margin-bottom: 20px; /* Reduced from 30px */
-    position: relative; /* For z-index if needed over background */
-    z-index: 10;
+    margin-bottom: 30px;
+    padding: 15px;
+    background: rgba(0, 0, 0, 0.6);
+    border-radius: 10px;
+    box-shadow: 0 4px 6px var(--shadow-color);
+    backdrop-filter: blur(5px);
+    width: 100%;
+    max-width: 600px;
 }
 
 .title-container h1 {
     font-size: 2.5em;
     margin: 0 20px;
-    color: #fff; /* Explicitly white for title over new BG */
-    text-shadow: 2px 2px 4px #000, 0 0 5px #000; /* Stronger shadow */
+    color: var(--text-light);
+    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
 }
 
 .decorative-pawn {
-    font-size: 3em;
-    /* color already handled by .white and .black specific versions */
+    font-size: 2.5em;
+    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
 }
-/* .decorative-pawn.white is fine */
-/* .decorative-pawn.black is fine */
 
+/* Game choice cards */
+.game-choice-container {
+    display: flex;
+    justify-content: center;
+    gap: 30px;
+    width: 100%;
+    max-width: 1200px;
+    padding: 20px;
+}
 
-/* Styles for #pawn-war-setup-container (previously #setup-container) */
-/* Ensure these styles are correctly applied to #pawn-war-setup-container */
-/* The #setup-container rules from lines 36-40 and 86-95 are now merged into #pawn-war-setup-container above */
+.game-choice {
+    flex: 1;
+    max-width: 400px;
+    background: rgba(0, 0, 0, 0.7);
+    border-radius: 15px;
+    padding: 30px;
+    text-align: center;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    backdrop-filter: blur(10px);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+}
 
-#pawn-war-setup-container > div { /* Style for color, difficulty, icon selection divs */
+.game-choice:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.3);
+}
+
+.game-choice h3 {
+    font-size: 1.8em;
     margin-bottom: 20px;
-}
-#setup-container > div:last-child {
-    margin-bottom: 0;
+    color: var(--primary-color);
 }
 
-#setup-container h2 {
-    font-size: 1.3em;
-    color: #444;
-    margin-top: 0;
-    margin-bottom: 15px;
+.game-choice p {
+    margin-bottom: 25px;
+    line-height: 1.6;
 }
 
-#setup-container button {
-    padding: 10px 15px;
-    font-size: 1em;
-    margin: 5px;
-    cursor: pointer;
-    border: 1px solid #ccc;
+/* Game boards */
+.board-container {
+    background: rgba(0, 0, 0, 0.8);
+    padding: 15px;
+    border-radius: 10px;
+    box-shadow: 0 4px 8px var(--shadow-color);
+    width: fit-content;
+    margin: 0 auto;
+}
+
+#board, #kd-board {
+    width: 400px;
+    height: 400px;
+    border: 2px solid var(--secondary-color);
     border-radius: 4px;
-    background-color: #fff;
-    transition: background-color 0.2s;
+    overflow: hidden;
+    padding: 0;
+    margin: 0;
+    font-size: 0;
+    line-height: 0;
+    display: block;
 }
-
-#setup-container button:hover {
-    background-color: #e0e0e0;
-}
-
-
-#board {
-    display: grid;
-    grid-template-columns: repeat(8, 50px);
-    grid-template-rows: repeat(8, 50px);
-    border: 2px solid #333;
-    box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
-    position: relative; /* Added for potential absolute positioning of children if needed */
-}
-
-.board-rotated {
-    transform: rotate(180deg);
-}
-
-/* Counter-rotate pawn symbols if the board is rotated */
-.board-rotated .pawn {
-    transform: rotate(180deg);
-    display: inline-block; /* Ensures transform applies correctly */
-}
-
 
 .square {
     width: 50px;
     height: 50px;
-    display: flex;
-    justify-content: center;
-    align-items: center;
+    display: inline-block;
+    vertical-align: top;
+    position: relative;
+    margin: 0;
+    padding: 0;
+    border: 0;
     font-size: 30px;
-    cursor: pointer;
-}
-
-.light {
-    background-color: #f0d9b5;
-}
-
-.dark {
-    background-color: #b58863;
-}
-
-.pawn {
-    font-size: 30px;
-    text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.7);
-    transition: opacity 0.5s ease-out; /* For smooth fade-out */
-}
-
-@keyframes fadeOut {
-    from { opacity: 1; }
-    to { opacity: 0; }
-}
-
-.pawn-captured-fadeout {
-    animation: fadeOut 0.5s ease-out forwards;
-}
-
-.white-pawn {
-    color: #ffffff; /* Pure white */
-    text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.8), /* Stronger shadow for better contrast */
-                -1px -1px 3px rgba(0, 0, 0, 0.8),
-                1px -1px 3px rgba(0, 0, 0, 0.8),
-                -1px 1px 3px rgba(0, 0, 0, 0.8);
-}
-
-.black-pawn {
-    color: #333;
-    text-shadow: 1px 1px 2px rgba(255, 255, 255, 0.3);
-}
-
-.selected {
-    background-color: yellow;
-}
-
-.possible-move {
-    background-color: rgba(0, 255, 0, 0.5);
-}
-
-.hint-square {
-    background-color: rgba(0, 0, 255, 0.3) !important; /* Blueish highlight, !important to override others if needed */
-    outline: 2px solid blue;
-}
-
-#game-status {
-    margin-bottom: 20px;
-    font-size: 1.2em;
-    font-weight: bold;
-    min-height: 1.5em; /* Ensure space even when empty */
-    text-align: center; /* Center the game status text */
-}
-
-.game-info-container {
-    display: flex;
-    justify-content: space-between; /* Pushes captured sections to sides */
-    align-items: flex-start; /* Align items at the top */
-    width: 450px; /* Adjust width as needed, slightly wider than board */
-    margin-bottom: 10px;
-}
-
-.captured-pawns-display {
-    min-height: 30px; /* Height for one pawn */
-    min-width: 100px; /* Width for a couple of pawns */
-    display: flex;
-    flex-wrap: wrap; /* Allow pawns to wrap if many are captured */
-    align-items: center;
-    gap: 2px; /* Small gap between pawn symbols */
-    padding: 5px;
-    border: 1px solid #aaa; /* Darker border for better definition */
-    background-color: #d8d8d8; /* Medium gray for better contrast with both pawn colors */
-    border-radius: 4px;
-}
-
-.captured-pawns-display .pawn {
-    font-size: 24px; /* Slightly smaller for captured display */
-    text-shadow: none; /* Optional: remove shadow for captured */
-}
-
-#captured-by-player, #captured-by-ai {
+    line-height: 50px;
     text-align: center;
-}
-
-#captured-by-player h4, #captured-by-ai h4 {
-    margin-top: 0;
-    margin-bottom: 5px;
-    font-size: 0.9em;
-}
-
-/* Knight Defense Specific Styles */
-#knight-defense-game-area h2 {
-    color: #fff; /* White text for heading on dark background */
-    text-shadow: 1px 1px 2px #000;
-    margin-bottom: 15px;
-}
-
-#kd-info-bar {
-    display: flex;
-    justify-content: space-around;
-    align-items: center;
-    padding: 10px;
-    background-color: rgba(0, 0, 0, 0.2); /* Slightly darker semi-transparent background for info bar */
-    border-radius: 5px;
-    margin-bottom: 20px;
-    color: #fff; /* White text for info bar */
-    text-shadow: 1px 1px 1px #000;
-    width: 400px; /* Match board width */
-    box-sizing: border-box;
-}
-
-#kd-info-bar div {
-    margin: 0 10px;
-}
-
-#kd-board {
-    display: grid;
-    grid-template-columns: repeat(8, 50px); /* Standard 8x8 board */
-    grid-template-rows: repeat(8, 50px);
-    width: 400px; /* 8 squares * 50px */
-    height: 400px; /* 8 squares * 50px */
-    border: 2px solid #fff; /* White border for KD board */
-    box-shadow: 0 0 10px rgba(255, 255, 255, 0.3);
-    margin: 0 auto; /* Center the board */
-    position: relative;
-    /* Squares will be added by JS, can reuse .square, .light, .dark if desired */
-}
-
-#kd-message-area {
-    color: #fff;
-    text-shadow: 1px 1px 1px #000;
-    font-weight: bold;
-}
-
-.kd-game-controls button {
-    padding: 10px 15px;
-    font-size: 1em;
-    margin: 5px;
     cursor: pointer;
-    border: 1px solid #ccc;
-    border-radius: 4px;
-    background-color: #fff;
-    color: #333;
-    transition: background-color 0.2s;
 }
 
-.kd-game-controls button:hover {
-    background-color: #e0e0e0;
-}
-/* Knight Defense specific highlights */
-.kd-selected-knight {
-    background-color: rgba(255, 255, 0, 0.6); /* Brighter yellow for selected knight */
-    outline: 2px solid gold;
+.light { 
+    background-color: var(--board-light);
 }
 
-.kd-possible-move {
-    background-color: rgba(0, 255, 0, 0.4); /* Lighter green for possible moves */
+.dark { 
+    background-color: var(--board-dark);
 }
 
-/* Ensure KD pieces are visible on dark squares if reusing .pawn */
-#kd-board .pawn {
-    text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.8),
-                -1px -1px 3px rgba(0, 0, 0, 0.8),
-                1px -1px 3px rgba(0, 0, 0, 0.8),
-                -1px 1px 3px rgba(0, 0, 0, 0.8);
-}
-
-#main-menu {
-    width: 100%;
-    min-height: 70vh;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center; /* Center content vertically */
-    gap: 20px;
-    z-index: 10;
-    position: relative;
-    padding: 20px;
-    box-sizing: border-box;
-}
-
-#main-menu h2 {
-    color: #fff;
-    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.7);
-    font-size: 2em;
-    margin-bottom: 30px;
-}
-
-.game-choice-container {
-    display: flex;
-    width: 100%;
-    justify-content: space-evenly; /* Changed from center to space-evenly */
-    gap: 20px; /* Reduced gap */
-    margin-top: 20px;
-    padding: 0 40px; /* Add some padding on the sides */
-    box-sizing: border-box;
-}
-
-.game-choice {
-    width: 400px; /* Slightly wider cards */
-    height: 350px; /* Slightly shorter height */
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: flex-end;
-    padding: 30px;
-    border-radius: 15px;
-    background-color: rgba(0, 0, 0, 0.6); /* Make background slightly darker */
-    box-shadow: 0 0 20px rgba(0, 0, 0, 0.3); /* Add shadow for better separation */
-    backdrop-filter: blur(5px);
-    transition: transform 0.3s, background-color 0.3s;
-    cursor: pointer;
-    border: 2px solid rgba(255, 255, 255, 0.1);
-    position: relative;
-}
-
-.game-choice:hover {
-    transform: translateY(-10px);
-    background-color: rgba(0, 0, 0, 0.8);
-    border-color: rgba(255, 255, 255, 0.3);
-}
-
-.game-choice h3 {
-    color: #fff;
-    font-size: 1.5em;
-    margin-bottom: 15px;
-    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.7);
-}
-
-.game-choice p {
-    color: #ddd;
-    text-align: center;
-    margin-bottom: 20px;
-    text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.7);
-}
-
-.game-choice button {
-    padding: 12px 24px;
-    font-size: 1.1em;
-    border: none;
-    border-radius: 8px;
-    background-color: rgba(255, 255, 255, 0.9);
-    color: #333;
-    cursor: pointer;
-    transition: background-color 0.3s;
-}
-
-.game-choice button:hover {
-    background-color: #fff;
-}
-
-#pawn-war-choice {
-    /* margin-top removed */
-}
-
-#knight-defense-choice {
-    /* margin-bottom removed */
-}
-
-/* Level Up Animation Styles */
-.level-up-overlay {
-    position: fixed;
-    top: 0;
+.square span {
+    position: absolute;
     left: 0;
+    top: 0;
     width: 100%;
     height: 100%;
-    background-color: rgba(0, 0, 0, 0.7);
     display: flex;
-    flex-direction: column;
     justify-content: center;
     align-items: center;
-    z-index: 1000;
-    animation: fadeInOut 3s forwards;
-    pointer-events: none; /* Allow clicks to pass through */
 }
 
-.level-up-text {
-    font-size: 6em;
-    color: #FFD700;
-    text-shadow: 
-        0 0 10px #FFD700,
-        0 0 20px #FFD700,
-        0 0 30px #FF8C00,
-        0 0 40px #FF8C00;
-    animation: scaleUp 0.5s ease-out;
-    text-align: center;
-    font-weight: bold;
-}
-
-.level-up-number {
-    font-size: 8em;
-    color: #FFF;
-    text-shadow: 
-        0 0 10px #4169E1,
-        0 0 20px #4169E1,
-        0 0 30px #0000FF,
-        0 0 40px #0000FF;
-    animation: scaleUp 0.5s ease-out 0.3s;
-    text-align: center;
-    font-weight: bold;
-}
-
-@keyframes fadeInOut {
-    0% { opacity: 0; }
-    20% { opacity: 1; }
-    80% { opacity: 1; }
-    100% { opacity: 0; }
-}
-
-@keyframes scaleUp {
-    0% { 
-        transform: scale(0.1);
-        opacity: 0;
-    }
-    100% { 
-        transform: scale(1);
-        opacity: 1;
-    }
-}
-
-/* Responsive Design */
+/* Mobile styles */
 @media screen and (max-width: 768px) {
-    body::before,
-    body::after {
-        width: 100%;
-        height: 50vh;
-        background-size: contain;
+    body {
+        padding: 10px;
     }
 
-    body::before {
-        top: 0;
-    }
-
-    body::after {
-        top: 50vh;
+    .title-container {
+        padding: 10px;
     }
 
     .title-container h1 {
         font-size: 1.8em;
-        text-align: center;
     }
 
     .game-choice-container {
         flex-direction: column;
+        align-items: center;
+        gap: 20px;
         padding: 10px;
     }
 
     .game-choice {
-        width: 90%;
-        margin: 10px auto;
+        width: 100%;
+        max-width: 350px;
+        padding: 20px;
     }
 
-    #board {
+    #board, #kd-board {
+        width: 320px;
+        height: 320px;
+    }
+
+    .square {
+        width: 40px;
+        height: 40px;
+        line-height: 40px;
+        font-size: 24px;
+    }
+
+    button {
+        padding: 10px 20px;
+        font-size: 0.9em;
+        width: 100%;
+        max-width: 200px;
+    }
+
+    .game-info-container, #kd-info-bar {
+        flex-direction: column;
+        align-items: center;
+        gap: 10px;
+        font-size: 0.9em;
+    }
+}
+
+@media screen and (max-width: 380px) {
+    .title-container h1 {
+        font-size: 1.4em;
+    }
+
+    #board, #kd-board {
+        width: 280px;
+        height: 280px;
+    }
+
+    .square {
+        width: 35px;
+        height: 35px;
+        line-height: 35px;
+        font-size: 20px;
+    }
+}
+
+/* Mobile touch optimizations */
+@media (hover: none) and (pointer: coarse) {
+    .board-container {
+        -webkit-touch-callout: none;
+        -webkit-user-select: none;
+        user-select: none;
+        touch-action: manipulation;
+    }
+
+    #board, #kd-board {
+        -webkit-tap-highlight-color: transparent;
+    }
+
+    .square {
+        -webkit-tap-highlight-color: transparent;
+        touch-action: manipulation;
+    }
+}
+
+/* Selected and possible move highlights */
+.selected, .kd-selected-knight {
+    position: relative;
+    z-index: 1;
+}
+
+.selected::after, .kd-selected-knight::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: rgba(255, 255, 0, 0.4);
+    pointer-events: none;
+}
+
+.possible-move::after, .kd-possible-move::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: rgba(0, 255, 0, 0.3);
+    pointer-events: none;
+}
+
+/* Game controls and info bars */
+.game-controls, .kd-game-controls {
+    display: flex;
+    gap: 10px;
+    margin-top: 20px;
+    flex-wrap: wrap;
+    justify-content: center;
+}
+
+button {
+    padding: 12px 24px;
+    font-size: 1em;
+    border: none;
+    border-radius: 8px;
+    background: var(--primary-color);
+    color: var(--text-light);
+    cursor: pointer;
+    transition: all 0.2s ease;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+button:hover {
+    background: var(--secondary-color);
+    transform: translateY(-2px);
+}
+
+/* Info displays */
+.game-info-container, #kd-info-bar {
+    background: rgba(0, 0, 0, 0.6);
+    border-radius: 8px;
+    padding: 15px;
+    margin: 15px 0;
+    backdrop-filter: blur(5px);
+    width: 100%;
+    max-width: 400px;
+}
+
+/* Landscape mode */
+@media screen and (max-height: 600px) and (orientation: landscape) {
+    body {
+        padding: 5px;
+    }
+
+    .title-container {
+        margin-bottom: 10px;
+    }
+
+    .game-choice-container {
+        flex-direction: row;
+        padding: 5px;
+    }
+
+    .game-choice {
+        padding: 15px;
+    }
+
+    #board, #kd-board {
         grid-template-columns: repeat(8, 40px);
         grid-template-rows: repeat(8, 40px);
-        margin: 10px auto;
+        width: 320px;
+        height: 320px;
     }
 
     .square {
@@ -549,112 +366,205 @@ body::after {
         font-size: 24px;
     }
 
-    .pawn {
-        font-size: 24px;
-    }
-
-    #pawn-war-setup-container {
-        width: 90%;
-        max-width: 400px;
-        padding: 15px;
-        margin: 10px auto;
-    }
-
-    .game-info-container {
-        width: 90%;
-        flex-direction: column;
-        align-items: center;
-    }
-
-    #captured-by-player,
-    #captured-by-ai {
-        margin: 5px 0;
-    }
-
-    .game-controls {
-        display: flex;
-        flex-direction: column;
-        gap: 10px;
-    }
-
-    .game-controls button {
-        width: 100%;
-        margin: 5px 0;
-    }
-
-    #kd-info-bar {
-        flex-direction: column;
-        gap: 10px;
+    .game-controls, .kd-game-controls {
+        margin-top: 10px;
     }
 }
 
-/* Even smaller screens */
-@media screen and (max-width: 380px) {
-    .title-container h1 {
-        font-size: 1.5em;
-    }
+/* Game pieces and highlights */
+.pawn {
+    font-size: clamp(20px, 3.5vw, 30px);
+    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
+    transition: transform 0.2s ease;
+}
 
-    #board {
-        grid-template-columns: repeat(8, 35px);
-        grid-template-rows: repeat(8, 35px);
-    }
+/* Animations */
+@keyframes highlightMove {
+    0% { transform: scale(1); }
+    50% { transform: scale(1.1); }
+    100% { transform: scale(1); }
+}
 
-    .square {
-        width: 35px;
-        height: 35px;
-        font-size: 20px;
-    }
+.highlight-move {
+    animation: highlightMove 0.5s ease;
+}
 
-    .pawn {
-        font-size: 20px;
+/* Level up animation enhancement */
+.level-up-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.8);
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    z-index: 1000;
+    animation: fadeInOut 3s forwards;
+    backdrop-filter: blur(5px);
+}
+
+.level-up-text, .level-up-number {
+    text-align: center;
+    font-weight: bold;
+    animation: scaleUp 0.5s ease-out;
+    text-shadow: 0 0 20px rgba(255, 255, 255, 0.5);
+}
+
+.level-up-text {
+    font-size: clamp(3em, 10vw, 6em);
+    color: #FFD700;
+}
+
+.level-up-number {
+    font-size: clamp(4em, 12vw, 8em);
+    color: #4a90e2;
+    margin-top: 20px;
+}
+
+/* Win Message Animation */
+@keyframes winMessageAnimation {
+    0% {
+        transform: scale(1);
+        opacity: 1;
+    }
+    50% {
+        transform: scale(1.5);
+        opacity: 1;
+        text-shadow: 0 0 20px rgba(255, 215, 0, 0.8);
+    }
+    100% {
+        transform: scale(1);
+        opacity: 1;
     }
 }
 
-/* Landscape mode adjustments */
-@media screen and (max-height: 600px) and (orientation: landscape) {
-    body {
-        padding-top: 10px;
-    }
-
-    .title-container {
-        margin-bottom: 10px;
-    }
-
-    .title-container h1 {
-        font-size: 1.5em;
-    }
-
-    #board {
-        grid-template-columns: repeat(8, 35px);
-        grid-template-rows: repeat(8, 35px);
-    }
-
-    .square {
-        width: 35px;
-        height: 35px;
-    }
-
-    .game-controls {
-        flex-direction: row;
-        flex-wrap: wrap;
-        justify-content: center;
-    }
-
-    .game-controls button {
-        width: auto;
-    }
+.win-message {
+    font-size: 2em;
+    font-weight: bold;
+    color: #FFD700;
+    text-align: center;
+    animation: winMessageAnimation 2s ease-in-out;
+    text-shadow: 0 0 10px rgba(255, 215, 0, 0.5);
+    background: rgba(0, 0, 0, 0.8);
+    padding: 20px;
+    border-radius: 10px;
+    backdrop-filter: blur(5px);
+    margin: 20px 0;
 }
 
-/* Fix for background images on mobile */
-@media screen and (max-width: 768px) {
-    body {
-        background: #2a2a2a;
-    }
+/* Power-ups */
+.powerup {
+    position: absolute;
+    width: 30px;
+    height: 30px;
+    border-radius: 50%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    animation: powerupFloat 2s infinite ease-in-out;
+    cursor: pointer;
+    z-index: 10;
+}
 
-    body::before,
-    body::after {
-        background-attachment: scroll;
-        background-position: center;
-        opacity: 0.3;
-    }
+.powerup-shield { background: radial-gradient(circle, #4a90e2, #2c3e50); }
+.powerup-timeSlow { background: radial-gradient(circle, #9b59b6, #8e44ad); }
+.powerup-clearBoard { background: radial-gradient(circle, #e74c3c, #c0392b); }
+.powerup-fortressRepair { background: radial-gradient(circle, #2ecc71, #27ae60); }
+
+@keyframes powerupFloat {
+    0%, 100% { transform: translateY(0); }
+    50% { transform: translateY(-10px); }
+}
+
+/* Combo System */
+.combo-counter {
+    position: absolute;
+    top: 20px;
+    right: 20px;
+    font-size: 24px;
+    font-weight: bold;
+    color: #FFD700;
+    text-shadow: 0 0 10px rgba(255, 215, 0, 0.5);
+    animation: comboScale 0.5s ease-out;
+}
+
+@keyframes comboScale {
+    0% { transform: scale(1); }
+    50% { transform: scale(1.5); }
+    100% { transform: scale(1); }
+}
+
+/* Special Pawn Types */
+.pawn-fast {
+    color: #e74c3c !important;
+    text-shadow: 0 0 10px rgba(231, 76, 60, 0.5);
+}
+
+.pawn-armored {
+    color: #95a5a6 !important;
+    text-shadow: 0 0 10px rgba(149, 165, 166, 0.5);
+}
+
+.pawn-ghost {
+    opacity: 0.6;
+    color: #ecf0f1 !important;
+    text-shadow: 0 0 10px rgba(236, 240, 241, 0.5);
+}
+
+/* Achievement Notification */
+.achievement-popup {
+    position: fixed;
+    top: 20px;
+    left: 50%;
+    transform: translateX(-50%);
+    background: rgba(0, 0, 0, 0.8);
+    color: #FFD700;
+    padding: 15px 30px;
+    border-radius: 10px;
+    font-size: 1.2em;
+    font-weight: bold;
+    text-align: center;
+    animation: achievementSlide 3s ease-in-out;
+    z-index: 1000;
+    backdrop-filter: blur(5px);
+}
+
+@keyframes achievementSlide {
+    0% { transform: translate(-50%, -100%); opacity: 0; }
+    20% { transform: translate(-50%, 0); opacity: 1; }
+    80% { transform: translate(-50%, 0); opacity: 1; }
+    100% { transform: translate(-50%, -100%); opacity: 0; }
+}
+
+/* Game Stats Display */
+.game-stats {
+    position: absolute;
+    top: 10px;
+    left: 10px;
+    background: rgba(0, 0, 0, 0.7);
+    padding: 10px;
+    border-radius: 5px;
+    font-size: 0.9em;
+    color: var(--text-light);
+}
+
+.stats-row {
+    display: flex;
+    justify-content: space-between;
+    margin: 5px 0;
+}
+
+/* Timer Display */
+.game-timer {
+    font-family: monospace;
+    font-size: 1.2em;
+    color: var(--primary-color);
+}
+
+/* Move Counter */
+.move-counter {
+    color: var(--accent-color);
 }
